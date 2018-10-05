@@ -20,54 +20,22 @@ export class CoreAdminRouter extends Component {
     state = { children: [] };
 
     componentWillMount() {
-        this.initializeResources(this.props);
+        this.getPermissions(this.props);
     }
 
-    initializeResources = nextProps => {
-        if (typeof nextProps.children === 'function') {
-            this.initializeResourcesAsync(nextProps);
-        }
-    };
-
-    initializeResourcesAsync = async props => {
-        const { authProvider } = props;
+    getPermissions = async props => {
+        const { authProvider, userLogout } = props;
         try {
             const permissions = await authProvider(AUTH_GET_PERMISSIONS);
-            const { children } = props;
-
-            const childrenFuncResult = children(permissions);
-            if (childrenFuncResult.then) {
-                childrenFuncResult.then(resolvedChildren => {
-                    this.setState({
-                        children: resolvedChildren
-                            .filter(child => child)
-                            .map(child => ({
-                                ...child,
-                                props: {
-                                    ...child.props,
-                                    key: child.props.name,
-                                },
-                            })),
-                    });
-                });
-            } else {
-                this.setState({
-                    children: childrenFuncResult.filter(child => child),
-                });
-            }
+            this.setState({ permissions });
         } catch (error) {
-            this.props.userLogout();
+            userLogout();
         }
     };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.isLoggedIn !== this.props.isLoggedIn) {
-            this.setState(
-                {
-                    children: [],
-                },
-                () => this.initializeResources(nextProps)
-            );
+            this.getPermissions(nextProps);
         }
     }
 
@@ -99,6 +67,7 @@ export class CoreAdminRouter extends Component {
             theme,
             title,
         } = this.props;
+        const { permissions } = this.state;
 
         if (typeof children !== 'function' && !children) {
             return (
@@ -110,15 +79,12 @@ export class CoreAdminRouter extends Component {
             );
         }
 
-        if (
-            typeof children === 'function' &&
-            (!this.state.children || this.state.children.length === 0)
-        ) {
+        const childrenToRender =
+            typeof children === 'function' ? children(permissions) : children;
+
+        if (!childrenToRender) {
             return <Route path="/" key="loading" component={loading} />;
         }
-
-        let childrenToRender =
-            typeof children === 'function' ? this.state.children : children;
 
         return (
             <div>
@@ -127,6 +93,7 @@ export class CoreAdminRouter extends Component {
                 Children.map(childrenToRender, child =>
                     cloneElement(child, {
                         key: child.props.name,
+                        permissions,
                         // The context prop instructs the Resource component to not render anything
                         // but simply to register itself as a known resource
                         context: 'registration',
@@ -155,13 +122,14 @@ export class CoreAdminRouter extends Component {
                                 children: (
                                     <RoutesWithLayout
                                         catchAll={catchAll}
-                                        children={childrenToRender} // eslint-disable-line react/no-children-prop
                                         customRoutes={customRoutes.filter(
                                             route => !route.props.noLayout
                                         )}
                                         dashboard={dashboard}
                                         title={title}
-                                    />
+                                    >
+                                        {childrenToRender}
+                                    </RoutesWithLayout>
                                 ),
                                 dashboard,
                                 logout,

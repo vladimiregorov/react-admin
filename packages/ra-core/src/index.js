@@ -30,3 +30,4 @@ export CoreAdminRouter from './CoreAdminRouter';
 export createAdminStore from './createAdminStore';
 export RoutesWithLayout from './RoutesWithLayout';
 export Resource from './Resource';
+export Resources from './Resources';

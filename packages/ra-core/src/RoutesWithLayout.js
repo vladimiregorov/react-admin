@@ -1,7 +1,9 @@
-import React, { Children, cloneElement, createElement } from 'react';
+import React, { createElement } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
+import { getResources } from './reducer';
 import WithPermissions from './auth/WithPermissions';
 
 const RoutesWithLayout = ({
@@ -9,11 +11,9 @@ const RoutesWithLayout = ({
     children,
     customRoutes,
     dashboard,
+    firstResource,
     title,
 }) => {
-    const childrenAsArray = React.Children.toArray(children);
-    const firstChild = childrenAsArray.length > 0 ? childrenAsArray[0] : null;
-
     return (
         <Switch>
             {customRoutes &&
@@ -27,20 +27,7 @@ const RoutesWithLayout = ({
                         children={route.props.children} // eslint-disable-line react/no-children-prop
                     />
                 ))}
-            {Children.map(children, child => (
-                <Route
-                    key={child.props.name}
-                    path={`/${child.props.name}`}
-                    render={props =>
-                        cloneElement(child, {
-                            // The context prop instruct the Resource component to
-                            // render itself as a standard component
-                            context: 'route',
-                            ...props,
-                        })
-                    }
-                />
-            ))}
+            {children}
             {dashboard ? (
                 <Route
                     exact
@@ -55,11 +42,11 @@ const RoutesWithLayout = ({
                         />
                     )}
                 />
-            ) : firstChild ? (
+            ) : firstResource ? (
                 <Route
                     exact
                     path="/"
-                    render={() => <Redirect to={`/${firstChild.props.name}`} />}
+                    render={() => <Redirect to={`/${firstResource}`} />}
                 />
             ) : null}
             <Route
@@ -84,6 +71,16 @@ RoutesWithLayout.propTypes = {
     customRoutes: PropTypes.array,
     dashboard: componentPropType,
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    firstResource: PropTypes.string,
 };
 
-export default RoutesWithLayout;
+const mapStateToProps = state => ({
+    firstResource: getResources(state)[0].name,
+});
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        {}
+    )(RoutesWithLayout)
+);

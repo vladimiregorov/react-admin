@@ -1,7 +1,7 @@
 /* eslint react/jsx-key: off */
 import 'babel-polyfill';
-import React from 'react';
-import { Admin, Resource } from 'react-admin'; // eslint-disable-line import/no-unresolved
+import React, { Fragment } from 'react';
+import { Admin, Resource, Resources } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { render } from 'react-dom';
 import { Route } from 'react-router';
 import { reducer as tree } from 'ra-tree-ui-materialui';
@@ -34,12 +34,14 @@ render(
             <Route exact path="/custom2" component={CustomRouteLayout} />,
         ]}
     >
-        {permissions => [
-            <Resource name="posts" {...posts} />,
-            <Resource name="comments" {...comments} />,
-            permissions ? <Resource name="users" {...users} /> : null,
-            <Resource name="tags" {...tags} />,
-        ]}
+        {permissions => (
+            <Resources>
+                <Resource name="posts" {...posts} />
+                <Resource name="comments" {...comments} />
+                {permissions ? <Resource name="users" {...users} /> : null}
+                <Resource name="tags" {...tags} />
+            </Resources>
+        )}
     </Admin>,
     document.getElementById('root')
 );

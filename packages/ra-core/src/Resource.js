@@ -1,7 +1,7 @@
 import React, { createElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import WithPermissions from './auth/WithPermissions';
 
 import { registerResource, unregisterResource } from './actions';
@@ -48,16 +48,7 @@ export class Resource extends Component {
     }
 
     render() {
-        const {
-            match,
-            context,
-            name,
-            list,
-            create,
-            edit,
-            show,
-            options,
-        } = this.props;
+        const { context, name, list, create, edit, show, options } = this.props;
 
         if (context === 'registration') {
             return null;
@@ -72,85 +63,88 @@ export class Resource extends Component {
             hasCreate: !!create,
         };
 
-        const basePath = match.url;
-
         return (
-            <Switch>
-                {create && (
-                    <Route
-                        path={`${match.url}/create`}
-                        render={routeProps => (
-                            <WithPermissions
-                                render={props =>
-                                    createElement(create, {
-                                        basePath,
-                                        ...props,
-                                    })
-                                }
-                                {...routeProps}
-                                {...resource}
+            <Route
+                path={`/${name}`}
+                render={({ match }) => (
+                    <Switch>
+                        {create && (
+                            <Route
+                                path={`${match.url}/create`}
+                                render={routeProps => (
+                                    <WithPermissions
+                                        render={props =>
+                                            createElement(create, {
+                                                basePath: match.url,
+                                                ...props,
+                                            })
+                                        }
+                                        {...routeProps}
+                                        {...resource}
+                                    />
+                                )}
                             />
                         )}
-                    />
-                )}
-                {show && (
-                    <Route
-                        path={`${match.url}/:id/show`}
-                        render={routeProps => (
-                            <WithPermissions
-                                render={props =>
-                                    createElement(show, {
-                                        basePath,
-                                        id: decodeURIComponent(
-                                            props.match.params.id
-                                        ),
-                                        ...props,
-                                    })
-                                }
-                                {...routeProps}
-                                {...resource}
+                        {show && (
+                            <Route
+                                path={`${match.url}/:id/show`}
+                                render={routeProps => (
+                                    <WithPermissions
+                                        render={props =>
+                                            createElement(show, {
+                                                basePath: match.url,
+                                                id: decodeURIComponent(
+                                                    props.match.params.id
+                                                ),
+                                                ...props,
+                                            })
+                                        }
+                                        {...routeProps}
+                                        {...resource}
+                                    />
+                                )}
                             />
                         )}
-                    />
-                )}
-                {edit && (
-                    <Route
-                        path={`${match.url}/:id`}
-                        render={routeProps => (
-                            <WithPermissions
-                                render={props =>
-                                    createElement(edit, {
-                                        basePath,
-                                        id: decodeURIComponent(
-                                            props.match.params.id
-                                        ),
-                                        ...props,
-                                    })
-                                }
-                                {...routeProps}
-                                {...resource}
+                        {edit && (
+                            <Route
+                                path={`${match.url}/:id`}
+                                render={routeProps => (
+                                    <WithPermissions
+                                        render={props =>
+                                            createElement(edit, {
+                                                basePath: match.url,
+                                                id: decodeURIComponent(
+                                                    props.match.params.id
+                                                ),
+                                                ...props,
+                                            })
+                                        }
+                                        {...routeProps}
+                                        {...resource}
+                                    />
+                                )}
                             />
                         )}
-                    />
-                )}
-                {list && (
-                    <Route
-                        path={`${match.url}`}
-                        render={routeProps => (
-                            <WithPermissions
-                                render={props =>
-                                    createElement(list, {
-                                        basePath,
-                                        ...props,
-                                    })
-                                }
-                                {...routeProps}
-                                {...resource}
+                        {list && (
+                            <Route
+                                path={`${match.url}`}
+                                render={routeProps => (
+                                    <WithPermissions
+                                        render={props =>
+                                            createElement(list, {
+                                                basePath: match.url,
+                                                ...props,
+                                            })
+                                        }
+                                        {...routeProps}
+                                        {...resource}
+                                    />
+                                )}
                             />
                         )}
-                    />
+                    </Switch>
                 )}
-            </Switch>
+            />
         );
     }
 }
@@ -179,7 +173,9 @@ Resource.defaultProps = {
     options: {},
 };
 
-export default connect(
-    null,
-    { registerResource, unregisterResource }
-)(Resource);
+export default withRouter(
+    connect(
+        null,
+        { registerResource, unregisterResource }
+    )(Resource)
+);
