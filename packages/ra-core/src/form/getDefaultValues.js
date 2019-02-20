@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { getRecord as getRecordFromState} from '../reducer';
 
 const getDefaultValues = (data = {}, defaultValue = {}, defaultValues = {}) => {
     const globalDefaultValue =
@@ -8,7 +9,7 @@ const getDefaultValues = (data = {}, defaultValue = {}, defaultValues = {}) => {
 
 const getRecord = (state, props) => props.record;
 const getDefaultValue = (state, props) => props.defaultValue;
-const getDefaultValuesFromState = state => state.admin.record;
+const getDefaultValuesFromState = (state, props) => getRecordFromState(props.form, props.resource)(state);
 
 export default createSelector(
     getRecord,

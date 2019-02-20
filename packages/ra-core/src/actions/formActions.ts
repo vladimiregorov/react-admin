@@ -3,11 +3,23 @@ export const INITIALIZE_FORM = 'RA/INITIALIZE_FORM';
 export interface InitializeFormAction {
     readonly type: typeof INITIALIZE_FORM;
     readonly payload: any;
+    readonly meta: {
+        form: string;
+        resource: string;
+    };
 }
 
-export const initializeForm = (initialValues: any): InitializeFormAction => ({
+export const initializeForm = (
+    form: string,
+    resource: string,
+    initialValues: any
+): InitializeFormAction => ({
     type: INITIALIZE_FORM,
     payload: initialValues,
+    meta: {
+        form,
+        resource,
+    },
 });
 
 export const RESET_FORM = 'RA/RESET_FORM';

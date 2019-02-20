@@ -13,38 +13,45 @@ export class DefaultValue extends Component {
         defaultValue: PropTypes.any,
         initializeForm: PropTypes.func.isRequired,
         input: PropTypes.object,
+        meta: PropTypes.object,
         source: PropTypes.string,
+        resource: PropTypes.string,
         validate: PropTypes.oneOfType([PropTypes.func, PropTypes.array]),
     };
 
     componentDidMount() {
-        const { defaultValue, input, initializeForm, source } = this.props;
+        const { defaultValue, input } = this.props;
         if (typeof defaultValue === 'undefined' || input) {
             return;
         }
-        initializeForm({
-            [source]:
-                typeof defaultValue === 'function'
-                    ? defaultValue()
-                    : defaultValue,
-        });
+        this.dispatchDefaultValue()
     }
 
     componentDidUpdate(prevProps) {
-        const { defaultValue, input, initializeForm, source } = this.props;
+        const { defaultValue, input } = this.props;
         if (typeof defaultValue === 'undefined' || input) {
             return;
         }
 
         if (defaultValue !== prevProps.defaultValue) {
-            initializeForm({
-                [source]:
-                    typeof defaultValue === 'function'
-                        ? defaultValue()
-                        : defaultValue,
-            });
+            this.dispatchDefaultValue()
         }
     }
+
+    dispatchDefaultValue = () => {
+        const { defaultValue, meta, initializeForm, resource, source } = this.props;
+
+        initializeForm(
+            meta.form,
+            resource,
+            {
+            [source]:
+                typeof defaultValue === 'function'
+                    ? defaultValue()
+                    : defaultValue,
+            }
+        );
+}
 
     render() {
         const { initializeForm, decoratedComponent, ...props } = this.props;

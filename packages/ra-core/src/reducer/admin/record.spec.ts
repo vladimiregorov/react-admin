@@ -1,6 +1,6 @@
 import expect from 'expect';
 import { INITIALIZE_FORM, RESET_FORM } from '../../actions/formActions';
-import reducer from './record';
+import reducer, { getStateKey } from './record';
 
 describe('record reducer', () => {
     it('should return an empty record by default', () => {
@@ -18,12 +18,15 @@ describe('record reducer', () => {
                 {
                     type: INITIALIZE_FORM,
                     payload: { bar: 'foo', 'deep.very.deep': 'gotme' },
+                    meta: { form: 'record-form', resource: 'posts' },
                 }
             )
         ).toEqual({
             foo: 'bar',
-            bar: 'foo',
-            deep: { very: { deep: 'gotme' } },
+            [getStateKey('record-form', 'posts')]: {
+                bar: 'foo',
+                deep: { very: { deep: 'gotme' } },
+            },
         });
     });
 });

@@ -18,6 +18,9 @@ type ActionTypes =
     | ResetFormAction
     | { type: 'OTHER_ACTION' };
 
+export const getStateKey = (form: string, resource: string) =>
+    `${resource}@${form}`;
+
 const recordReducer: Reducer<State> = (
     previousState = initialState,
     action: ActionTypes
@@ -27,16 +30,23 @@ const recordReducer: Reducer<State> = (
     }
 
     if (action.type === INITIALIZE_FORM) {
+        const stateKey = getStateKey(action.meta.form, action.meta.resource);
+
         return Object.keys(action.payload).reduce(
             (acc, key) => {
                 // Ensure we correctly set default values for path with dot notation
-                set(acc, key, action.payload[key]);
+                set(acc, `${stateKey}.${key}`, action.payload[key]);
                 return acc;
             },
             { ...previousState }
         );
     }
     return previousState;
+};
+
+export const getRecord = (form: string, resource: string) => (state: State) => {
+    const stateKey = getStateKey(form, resource);
+    return state[stateKey];
 };
 
 export default recordReducer;

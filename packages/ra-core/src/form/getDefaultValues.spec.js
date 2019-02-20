@@ -1,5 +1,6 @@
 import assert from 'assert';
 import getDefaultValues from './getDefaultValues';
+import { getStateKey } from '../reducer/admin/record';
 
 describe('getDefaultValues', () => {
     const someTitle = 'some value';
@@ -14,8 +15,16 @@ describe('getDefaultValues', () => {
             },
         };
         const defaultValuesResult = getDefaultValues(
-            { admin: { record: { title: someTitleFromField } } },
             {
+                admin: {
+                    record: {
+                        [getStateKey('record-form', 'posts')]: { title: someTitleFromField }
+                    }
+                }
+            },
+            {
+                form: 'record-form',
+                resource: 'posts',
                 record: { aField: 'aValue' },
                 defaultValue: {
                     aField: 'aDefaultValue',
@@ -38,8 +47,16 @@ describe('getDefaultValues', () => {
             },
         };
         const defaultValuesResult = getDefaultValues(
-            { admin: { record: { title: someTitleFromField } } },
             {
+                admin: {
+                    record: {
+                        [getStateKey('record-form', 'posts')]: { title: someTitleFromField }
+                    }
+                }
+            },
+            {
+                form: 'record-form',
+                resource: 'posts',
                 record: { aField: 'aValue' },
                 defaultValue: () => ({
                     aField: 'aDefaultValue',

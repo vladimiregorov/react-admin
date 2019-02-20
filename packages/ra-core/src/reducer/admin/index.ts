@@ -5,7 +5,7 @@ import resources, {
 } from './resource';
 import loading from './loading';
 import notifications from './notifications';
-import record from './record';
+import record, { getRecord as recordGetRecord } from './record';
 import references, {
     getPossibleReferenceValues as referencesGetPossibleReferenceValues,
 } from './references';
@@ -34,5 +34,8 @@ export const getReferenceResource = (state, props) => {
 };
 
 export const isLoggedIn = state => authIsLoggedIn(state.auth);
+
+export const getRecord = (form: string, resource: string) => state =>
+    recordGetRecord(form, resource)(state.record);
 
 export { getPossibleReferences } from './references';
