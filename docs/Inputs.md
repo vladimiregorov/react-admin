@@ -644,6 +644,29 @@ You can customize the `step` props (which defaults to "any"):
 <NumberInput source="nb_views" step={1} />
 ```
 
+## `<PasswordInput>`
+
+`<PasswordInput>` works like the [`<TextInput>`](#textinput) but overwrites its `type` prop to `password` or `text`  in accordance with a visibility button, hidden by default.
+
+```jsx
+import { PasswordInput } from 'react-admin';
+
+<PasswordInput source="password" />
+```
+
+![Password Input](./img/password-input.png)
+
+It is possible to change the default behavior and display the value by default via the `initiallyVisible` prop:
+
+```jsx
+import { PasswordInput } from 'react-admin';
+
+<PasswordInput source="password" initiallyVisible />
+```
+
+![Password Input (visible)](./img/password-input-visible.png)
+
+
 ## `<RadioButtonGroupInput>`
 
 If you want to let the user choose a value among a list of possible values by showing them all (instead of hiding them behind a dropdown list, as in [`<SelectInput>`](#selectinput)), `<RadioButtonGroupInput>` is the right component. Set the `choices` attribute to determine the options (with `id`, `name` tuples):

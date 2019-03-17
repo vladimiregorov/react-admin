@@ -51,9 +51,15 @@ export default {
                 orders: 'Orders',
                 reviews: 'Reviews',
                 stats: 'Stats',
+                password: 'Password',
+                change_password: 'Change Password',
             },
             page: {
                 delete: 'Delete Customer',
+            },
+            errors: {
+                password_mismatch:
+                    'The password confirmation is not the same as the first password.',
             },
         },
         commands: {

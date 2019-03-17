@@ -60,6 +60,9 @@ module.exports = {
                 single_missing:
                     'La référence associée ne semble plus disponible.',
             },
+            password: {
+                toggle_visibility: 'Afficher / Cacher',
+            },
         },
         message: {
             about: 'Au sujet de',

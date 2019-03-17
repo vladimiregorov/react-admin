@@ -62,6 +62,8 @@ export default {
                 orders: 'Commandes',
                 reviews: 'Commentaires',
                 stats: 'Statistiques',
+                password: 'Mot de passe',
+                change_password: 'Changer le mot de passe',
             },
             page: {
                 delete: 'Supprimer le client',

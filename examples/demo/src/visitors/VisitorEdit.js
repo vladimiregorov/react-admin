@@ -9,10 +9,12 @@ import {
     LongTextInput,
     NullableBooleanInput,
     NumberField,
+    PasswordInput,
     ReferenceManyField,
     TabbedForm,
     TextField,
     TextInput,
+    translate as withTranslation,
 } from 'react-admin';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -21,18 +23,19 @@ import ProductReferenceField from '../products/ProductReferenceField';
 import StarRatingField from '../reviews/StarRatingField';
 import FullNameField from './FullNameField';
 import SegmentsInput from './SegmentsInput';
-import { styles } from './VisitorCreate';
+import { styles, validatePasswords } from './VisitorCreate';
 
 const useStyles = makeStyles(styles);
 
 const VisitorTitle = ({ record }) =>
     record ? <FullNameField record={record} size={32} /> : null;
 
-const VisitorEdit = props => {
+const VisitorEdit = ({ translate, ...props }) => {
     const classes = useStyles();
+
     return (
-        <Edit title={<VisitorTitle />} {...props}>
-            <TabbedForm>
+        <Edit {...props} title={<VisitorTitle />}>
+            <TabbedForm validate={validatePasswords(translate)}>
                 <FormTab label="resources.customers.tabs.identity">
                     <TextInput
                         source="first_name"
@@ -123,9 +126,22 @@ const VisitorEdit = props => {
                         style={{ width: 128, display: 'inline-block' }}
                     />
                 </FormTab>
+                <FormTab
+                    label="resources.customers.tabs.change_password"
+                    path="password"
+                >
+                    <PasswordInput
+                        source="password"
+                        formClassName={classes.password}
+                    />
+                    <PasswordInput
+                        source="confirm_password"
+                        formClassName={classes.confirm_password}
+                    />
+                </FormTab>
             </TabbedForm>
         </Edit>
     );
 };
 
-export default VisitorEdit;
+export default withTranslation(VisitorEdit);

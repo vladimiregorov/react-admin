@@ -58,6 +58,9 @@ module.exports = {
                 single_missing:
                     'Associated reference no longer appears to be available.',
             },
+            password: {
+                toggle_visibility: 'Toggle visibility',
+            },
         },
         message: {
             about: 'About',

@@ -6,6 +6,8 @@ import {
     LongTextInput,
     TabbedForm,
     TextInput,
+    PasswordInput,
+    translate as withTranslation,
 } from 'react-admin';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,6 +15,9 @@ export const styles = {
     first_name: { display: 'inline-block' },
     last_name: { display: 'inline-block', marginLeft: 32 },
     email: { width: 544 },
+    birthday: { display: 'inline-block' },
+    password: { display: 'inline-block' },
+    confirm_password: { display: 'inline-block', marginLeft: 32 },
     address: { maxWidth: 544 },
     zipcode: { display: 'inline-block' },
     city: { display: 'inline-block', marginLeft: 32 },
@@ -24,13 +29,28 @@ export const styles = {
     },
 };
 
+export const validatePasswords = translate => ({
+    password,
+    confirm_password,
+}) => {
+    const errors = {};
+
+    if (password && confirm_password && password !== confirm_password) {
+        errors.confirm_password = [
+            translate('resources.customers.errors.password_mismatch'),
+        ];
+    }
+
+    return errors;
+};
+
 const useStyles = makeStyles(styles);
 
-const VisitorCreate = props => {
+const VisitorCreate = ({ translate, ...props }) => {
     const classes = useStyles();
     return (
         <Create {...props}>
-            <TabbedForm>
+            <TabbedForm validate={validatePasswords(translate)}>
                 <FormTab label="resources.customers.tabs.identity">
                     <TextInput
                         autoFocus
@@ -64,9 +84,24 @@ const VisitorCreate = props => {
                     />
                     <TextInput source="city" formClassName={classes.city} />
                 </FormTab>
+                <FormTab
+                    label="resources.customers.tabs.password"
+                    path="password"
+                >
+                    <PasswordInput
+                        source="password"
+                        formClassName={classes.password}
+                        required
+                    />
+                    <PasswordInput
+                        source="confirm_password"
+                        formClassName={classes.confirm_password}
+                        required
+                    />
+                </FormTab>
             </TabbedForm>
         </Create>
     );
 };
 
-export default VisitorCreate;
+export default withTranslation(VisitorCreate);

@@ -14,6 +14,7 @@ import Labeled from './Labeled';
 import LongTextInput from './LongTextInput';
 import NullableBooleanInput from './NullableBooleanInput';
 import NumberInput from './NumberInput';
+import PasswordInput from './PasswordInput';
 import RadioButtonGroupInput from './RadioButtonGroupInput';
 import ReferenceArrayInput from './ReferenceArrayInput';
 import ReferenceInput from './ReferenceInput';
@@ -40,6 +41,7 @@ export {
     LongTextInput,
     NullableBooleanInput,
     NumberInput,
+    PasswordInput,
     RadioButtonGroupInput,
     ReferenceArrayInput,
     ReferenceInput,
