@@ -1,7 +1,7 @@
 {
     "private": true,
     "version": "2.9.7",
-    "name": "react-admin-lerna",
+    "name": "react-admin",
     "scripts": {
         "build": "lerna run build",
         "build-demo": "cd examples/demo && cross-env REACT_APP_DATA_PROVIDER=rest yarn -s build",
