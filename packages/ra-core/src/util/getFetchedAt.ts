@@ -1,7 +1,7 @@
 import pickBy from 'lodash/pickBy';
 import { Identifier } from '../types';
 
-const defaultCacheDuration = 10 * 60 * 1000; // ten minutes
+const defaultCacheDuration = 365 * 24 * 60 * 60 * 1000; // year
 
 /**
  * The dates each record was fetched at, index by record identifier
